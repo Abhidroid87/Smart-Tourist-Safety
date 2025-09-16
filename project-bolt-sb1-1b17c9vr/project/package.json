@@ -1,0 +1,47 @@
+{
+  "name": "smart-tourist-safety",
+  "version": "1.0.0",
+  "description": "Smart Tourist Safety Monitoring & Incident Response System",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter backend dev\" \"pnpm --filter web-dashboard dev\" \"pnpm --filter rag-service dev\"",
+    "build": "pnpm --filter backend build && pnpm --filter web-dashboard build",
+    "test": "pnpm --recursive test",
+    "lint": "pnpm --recursive lint",
+    "clean": "pnpm --recursive clean",
+    "deploy:web": "pnpm --filter web-dashboard build && vercel deploy --prod",
+    "deploy:backend": "docker build -f apps/backend/Dockerfile -t tourist-safety-backend .",
+    "deploy:mobile": "pnpm --filter mobile build",
+    "db:migrate": "cd supabase && npx supabase db push",
+    "db:seed": "cd supabase && npx supabase db seed",
+    "db:reset": "cd supabase && npx supabase db reset",
+    "blockchain:deploy": "node scripts/blockchain/deploy-contract.js",
+    "demo:seed": "node scripts/demo/seed-data.js",
+    "demo:simulate": "node scripts/demo/simulate-tourists.js"
+  },
+  "workspaces": [
+    "apps/*",
+    "services/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "keywords": [
+    "tourist-safety",
+    "emergency-response",
+    "blockchain",
+    "ai",
+    "geofencing",
+    "react-native",
+    "supabase"
+  ],
+  "author": "Smart Tourist Safety Team",
+  "license": "MIT"
+}
