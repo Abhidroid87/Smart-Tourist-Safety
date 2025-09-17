@@ -98,9 +98,13 @@ app.use('*', (req, res) => {
 // Initialize services
 async function startServer() {
   try {
-    // Initialize database connection
-    await initializeDatabase();
-    logger.info('Database connection established');
+    // Try to initialize database connection
+    try {
+      await initializeDatabase();
+      logger.info('Database connection established');
+    } catch (dbError) {
+      logger.error('Database connection failed, continuing without database:', dbError);
+    }
 
     // Start server
     httpServer.listen(PORT, () => {

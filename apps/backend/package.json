@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend API server for Smart Tourist Safety system",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc && tsc-alias",

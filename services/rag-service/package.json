@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "RAG (Retrieval-Augmented Generation) service for Smart Tourist Safety AI features",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",

@@ -16,9 +16,6 @@ import { logger } from './utils/logger';
 import { initializeVectorDatabase } from './services/vectorDatabase';
 import { errorHandler } from './middleware/errorHandler';
 import { validateApiKey } from './middleware/auth';
-import embeddingsRouter from "./routes/embeddings";
-
-app.use("/embeddings", embeddingsRouter);
 
 dotenv.config();
 

@@ -37,9 +37,10 @@ interface ChatResponse {
   processingTime: number;
 }
 
-const openai = new OpenAI({
+// Conditionally initialize OpenAI client
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
-});
+}) : null;
 
 /**
  * Generate AI chat response with RAG context
@@ -70,26 +71,33 @@ export async function generateChatResponse(request: ChatRequest): Promise<ChatRe
     const systemPrompt = buildSystemPrompt(request.context, request.language);
 
     // Step 5: Generate AI response
-    const completion = await openai.chat.completions.create({
-      model: process.env.OPENAI_MODEL || 'gpt-4-turbo-preview',
-      messages: [
-        {
-          role: 'system',
-          content: systemPrompt
-        },
-        {
-          role: 'user',
-          content: `Context: ${contextText}\n\nQuestion: ${request.message}`
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 1000,
-      top_p: 1.0,
-      frequency_penalty: 0.0,
-      presence_penalty: 0.0
-    });
+    let aiResponse: string;
+    
+    if (!openai) {
+      logger.warn('OpenAI API key not configured, using fallback response');
+      aiResponse = `I understand you're asking about: "${request.message}". While I don't have access to AI services right now, I can tell you that this appears to be related to tourist safety. Please contact local authorities if this is an emergency, or check with tourist information centers for general inquiries.`;
+    } else {
+      const completion = await openai.chat.completions.create({
+        model: process.env.OPENAI_MODEL || 'gpt-4-turbo-preview',
+        messages: [
+          {
+            role: 'system',
+            content: systemPrompt
+          },
+          {
+            role: 'user',
+            content: `Context: ${contextText}\n\nQuestion: ${request.message}`
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000,
+        top_p: 1.0,
+        frequency_penalty: 0.0,
+        presence_penalty: 0.0
+      });
 
-    const aiResponse = completion.choices[0]?.message?.content || 'I apologize, but I cannot generate a response at this time.';
+      aiResponse = completion.choices[0]?.message?.content || 'I apologize, but I cannot generate a response at this time.';
+    }
 
     // Step 6: Calculate confidence score
     const confidence = calculateConfidence(relevantDocs, aiResponse);
