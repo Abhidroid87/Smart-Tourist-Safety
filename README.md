@@ -1,4 +1,4 @@
-# Smart Tourist Safety - Fullstack Hackathon Starter
+# Smart Tourist Safety 
 
 A comprehensive fullstack monitoring and incident response system for tourist safety, built with modern web technologies, AI integration, and blockchain anchoring.
 
